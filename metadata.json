@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Circle Trader Game Fundamental",
+  "description": "Fundamental trading simulation game resolving around NFP, CPI, and GDP data releases with realistic market reactions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
