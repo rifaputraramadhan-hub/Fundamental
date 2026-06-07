@@ -266,10 +266,10 @@ export default function App() {
     if (currentNews) {
        setCurrentNews({
          ...currentNews,
-         actualUp: usdStrength === 'strong' ? currentNews.actualUp : '', 
-         actualDown: usdStrength === 'weak' ? currentNews.actualDown : '',
-         explanationUp: usdStrength === 'strong' ? currentNews.explanationUp : '',
-         explanationDown: usdStrength === 'weak' ? currentNews.explanationDown : '',
+         actualUp: usdStrength === 'strong' ? currentNews?.actualUp : '', 
+         actualDown: usdStrength === 'weak' ? currentNews?.actualDown : '',
+         explanationUp: usdStrength === 'strong' ? currentNews?.explanationUp : '',
+         explanationDown: usdStrength === 'weak' ? currentNews?.explanationDown : '',
        } as NewsEvent);
     }
 
@@ -534,6 +534,7 @@ export default function App() {
              <AnimatePresence>
                {gameState === 'waiting_entry' && (
                   <motion.div 
+                    key="overlay-waiting-entry"
                     initial={{ opacity: 0, y: 10 }} 
                     animate={{ opacity: 1, y: 0 }} 
                     exit={{ opacity: 0 }}
@@ -547,6 +548,7 @@ export default function App() {
                )}
                {gameState === 'waiting_news' && (
                   <motion.div 
+                    key="overlay-waiting-news"
                     initial={{ opacity: 0, scale: 0.9 }} 
                     animate={{ opacity: 1, scale: 1 }} 
                     exit={{ opacity: 0 }}
@@ -611,7 +613,7 @@ export default function App() {
           {/* Action Area */}
           <div className="mt-auto h-[64px] shrink-0 mb-1 relative">
             <AnimatePresence mode="wait">
-              {gameState === 'countdown' && (
+              {gameState === 'countdown' ? (
                  <motion.div 
                    key="countdown-ui"
                    initial={{ opacity: 0, y: 20 }}
@@ -642,9 +644,7 @@ export default function App() {
                      <span className="relative flex items-center gap-1.5 font-mono"><TrendingUp className="w-4 h-4 opacity-80" /> BUY</span>
                    </button>
                  </motion.div>
-              )}
-
-              {(gameState === 'waiting_entry' || gameState === 'waiting_news' || gameState === 'drama' || gameState === 'missed') && (
+              ) : (gameState === 'waiting_entry' || gameState === 'waiting_news' || gameState === 'drama' || gameState === 'missed') ? (
                  <motion.div 
                    key="waiting-ui"
                    initial={{ opacity: 0, scale: 0.9 }}
@@ -663,7 +663,7 @@ export default function App() {
                      )}
                    </p>
                  </motion.div>
-              )}
+              ) : null}
             </AnimatePresence>
           </div>
         </div>
@@ -685,30 +685,30 @@ export default function App() {
                  <div className="mb-6 text-center">
                    <h3 className="text-xs font-bold font-mono text-gray-500 tracking-widest mb-1">MARKET ACTUAL</h3>
                    <div className="text-white font-mono text-4xl font-bold">
-                     {currentNews.actualUp || currentNews.actualDown}
+                     {currentNews?.actualUp || currentNews?.actualDown}
                    </div>
                  </div>
                  
                  <div className="text-sm text-gray-300 bg-[#0A0A0A] p-4 rounded-lg border border-[#222] mb-6 flex items-start gap-3">
                    <div className="shrink-0 mt-0.5">
-                     {((currentNews.actualUp && userAction === 'sell') || (!currentNews.actualUp && userAction === 'buy')) 
+                     {((currentNews?.actualUp && userAction === 'sell') || (!currentNews?.actualUp && userAction === 'buy')) 
                        ? <CheckCircle className="w-5 h-5 text-green-500" />
                        : <XCircle className="w-5 h-5 text-red-500" />
                      }
                    </div>
                    <p className="leading-relaxed">
-                     {currentNews.explanationUp || currentNews.explanationDown}
+                     {currentNews?.explanationUp || currentNews?.explanationDown}
                    </p>
                  </div>
 
                  <div className="bg-black px-4 py-3 rounded-xl border border-neutral-800 mb-6 flex justify-between items-center">
                     <span className="text-gray-400 font-mono text-xs">P/L (Profit/Loss)</span>
                     <span className={`text-xl font-bold font-mono ${
-                      (currentNews.actualUp && userAction === 'sell') || (!currentNews.actualUp && userAction === 'buy') 
+                      (currentNews?.actualUp && userAction === 'sell') || (!currentNews?.actualUp && userAction === 'buy') 
                         ? 'text-green-500' 
                         : 'text-red-500'
                     }`}>
-                      {(currentNews.actualUp && userAction === 'sell') || (!currentNews.actualUp && userAction === 'buy') 
+                      {(currentNews?.actualUp && userAction === 'sell') || (!currentNews?.actualUp && userAction === 'buy') 
                         ? `+$${PROFIT_PER_WIN.toLocaleString()}`
                         : `-$${(winCount === 0 || mode === 'hard') ? balance.toLocaleString() : CUT_LOSS.toLocaleString()}`
                       }
