@@ -37,7 +37,7 @@ export const Chart: React.FC<ChartProps> = ({ data, entryPrice, className = '' }
   const candleWidth = 100 / gridColumns;
 
   return (
-    <div className={`relative w-full h-full bg-[#131722] overflow-hidden flex ${className}`}>
+    <div className={`relative w-full h-full bg-[#09090b] overflow-hidden flex ${className}`}>
       <div className="flex-1 relative w-full h-full">
         {/* Grid lines */}
         <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-5">
@@ -111,7 +111,7 @@ export const Chart: React.FC<ChartProps> = ({ data, entryPrice, className = '' }
                     y1={y}
                     x2="100"
                     y2={y}
-                    stroke="#D4AF37"
+                    stroke="#d4d4d8"
                     strokeWidth="0.3"
                     strokeDasharray="1,1"
                     opacity={0.8}
@@ -124,7 +124,7 @@ export const Chart: React.FC<ChartProps> = ({ data, entryPrice, className = '' }
       </div>
       
       {/* Y-Axis scale on the right */}
-      <div className="w-14 bg-[#131722] border-l border-neutral-800 flex flex-col justify-between py-0 text-[10px] text-[#787b86] font-mono items-end pr-1 relative">
+      <div className="w-14 bg-[#09090b] border-l border-zinc-800 flex flex-col justify-between py-0 text-[10px] text-[#787b86] font-mono items-end pr-1 relative">
          <span className="mt-[-6px]">{paddedMax.toFixed(1)}</span>
          <span className="mt-[-6px]">{(paddedMin + (finalRange * 0.8)).toFixed(1)}</span>
          <span className="mt-[-6px]">{(paddedMin + (finalRange * 0.6)).toFixed(1)}</span>

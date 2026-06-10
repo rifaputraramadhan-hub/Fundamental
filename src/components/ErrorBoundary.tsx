@@ -10,12 +10,16 @@ interface State {
   errorStack: string;
 }
 
-export class ErrorBoundary extends Component<Props, State> {
+export class ErrorBoundary extends React.Component<Props, State> {
   public state: State = {
     hasError: false,
     errorMsg: '',
     errorStack: ''
   };
+
+  constructor(props: Props) {
+    super(props);
+  }
 
   public static getDerivedStateFromError(error: Error): State {
     return { hasError: true, errorMsg: error.message, errorStack: error.stack || '' };
@@ -37,6 +41,6 @@ export class ErrorBoundary extends Component<Props, State> {
       );
     }
 
-    return this.props.children;
+    return (this as any).props.children;
   }
 }

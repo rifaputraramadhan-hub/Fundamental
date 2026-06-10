@@ -2,10 +2,12 @@ export type GameMode = 'easy' | 'normal' | 'hard';
 
 export type GameState = 
   | 'intro'
+  | 'fetching_news'
   | 'countdown' // 10s thinking time
   | 'waiting_entry' // 5s after clicking buy/sell
   | 'waiting_news' // 5s showing entry lines before news hits
   | 'drama' // Chart goes crazy
+  | 'missed' // If no action
   | 'result' // Show profits/loss
   | 'gameover'
   | 'win';

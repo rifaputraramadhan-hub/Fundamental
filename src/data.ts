@@ -306,10 +306,24 @@ export const normalEvents: NewsEvent[] = [
   }
 ];
 
+export const hardEvents: NewsEvent[] = [
+  { id: 'hard_1', name: 'Zew Economic Sentiment', time: '16:00', explanation: 'Mengukur optimisme institusi Eropa. Jika Eropa resesi, safe haven cair ke USD.', previous: '10.5', forecast: '5.0', actualUp: '-15.0', actualDown: '25.0', explanationUp: 'Sentimen memburuk parah, dana lari ke USD.', explanationDown: 'Sentimen meroket, modal beralih ke Euro.' },
+  { id: 'hard_2', name: 'China Caixin Mfg PMI', time: '08:45', explanation: 'Kondisi pabrik di China. Jika China kuat, komoditas emas naik, USD turun.', previous: '49.2', forecast: '50.1', actualUp: '48.0', actualDown: '52.5', explanationUp: 'Industri China kolaps, USD jadi safe-haven.', explanationDown: 'Pabrik China ngebut, memicu risk-on dan emas diborong.' },
+  { id: 'hard_3', name: 'US GDP Price Index', time: '19:30', explanation: 'Mengukur inflasi seluruh GDP, sangat lambat tapi fatal.', previous: '1.5%', forecast: '2.0%', actualUp: '3.5%', actualDown: '0.8%', explanationUp: 'Kenaikan inflasi ekstrim! USD meroket antisipasi rate hike.', explanationDown: 'Deflasi merayap, the FED bisa cut lebih. USD melemah.' },
+  { id: 'hard_4', name: 'OPEC+ Surprise Cut', time: 'Tak Terjadwal', explanation: 'Pengurangan produksi minyak. Minyak naik = inflasi = USD naik?', previous: '30M bpd', forecast: '30M bpd', actualUp: '28M bpd', actualDown: '32M bpd', explanationUp: 'Minyak langka, the FED tahan bunga demi lawan inflasi harga minyak. USD menguat.', explanationDown: 'Pasokan minyak membanjir! Inflasi terjun bebas, ruang The Fed buat cut terbuka.' },
+  { id: 'hard_5', name: 'BOC Rate Decision', time: '21:00', explanation: 'Suku bunga Kanada. Kanada negara komoditi penyaing.', previous: '5.00%', forecast: '4.75%', actualUp: '4.50%', actualDown: '5.25%', explanationUp: 'Kanada memotong rate ugal-ugalan! USD mendominasi likuiditas tetangga.', explanationDown: 'Kenaikan rate mendadak! CAD meroket melemahkan indeks Dolar.' },
+  { id: 'hard_6', name: 'Core PCE QoQ', time: '19:30', explanation: 'PCE Kuartalan, angka inti pengeluaran. Sering luput dari amatir.', previous: '2.1%', forecast: '2.2%', actualUp: '3.0%', actualDown: '1.2%', explanationUp: 'Inflasi riil meledak. The Fed terkunci Hawkish, USD to the moon.', explanationDown: 'PCE QoQ anjlok. Momentum pemangkasan terfasilitasi. Dolar di dump massal.' },
+  { id: 'hard_7', name: 'BOJ Yield Curve Control', time: '10:00', explanation: 'Batas yield Jepang. Mengguncang JPY berefek dominasi safe haven.', previous: '1.0%', forecast: '1.0%', actualUp: '1.0%', actualDown: '1.5%', explanationUp: 'BOJ tetap Dovish tanpa limit yield baru! JPY hancur, USD dominan.', explanationDown: 'BOJ melepas cap yield. Modal raksasa Jepang pulang kampung. USD tersapu bersih.' },
+  { id: 'hard_8', name: 'US Treasury Auction (30y)', time: '00:00', explanation: 'Lelang obligasi 30 tahun. Apakah asing utangi AS?', previous: '4.2%', forecast: '4.3%', actualUp: '4.8%', actualDown: '3.8%', explanationUp: 'Lelang basi. Yield terpaksa di markup tinggi untuk laku. USD terbang mengekor yield.', explanationDown: 'Lelang super sukses ludes 3x oversubscribed. Yield treasury jatuh membawa indeks dolar remuk.' },
+  { id: 'hard_9', name: 'SNB Rate Decision', time: '14:30', explanation: 'Keputusan suku bunga Swiss.', previous: '1.75%', forecast: '1.50%', actualUp: '1.25%', actualDown: '1.75%', explanationUp: 'Swiss Bank pangkas agresif, aliran uang keluar berlabuh di Dolar AS.', explanationDown: 'Swiss tahan suku bunga! CHF lompat menyerap triliunan di market global.' },
+  { id: 'hard_10', name: 'German Buba President Speaks', time: '18:00', explanation: 'Pidato presiden Bundesbank soal zona Euro.', previous: '-', forecast: '-', actualUp: '-', actualDown: '-', explanationUp: 'Pidato mengisyaratkan ekonomi jerman lumpuh. Euro collapse, indeks USD lompat bebas.', explanationDown: 'Rencana luar biasa penyelamatan makro benua dirilis, mata uang pesaing AS meroket tajam.' },
+  { id: 'hard_11', name: 'US Housing Starts', time: '19:30', explanation: 'Aktivitas bangun rumah riil lapiran awal. Leading indicator resesi properti.', previous: '1.30M', forecast: '1.35M', actualUp: '1.50M', actualDown: '1.15M', explanationUp: 'Aktivitas properti membara! Resesi mustahil terjadi. Dolar melambung.', explanationDown: 'Pembangunan mati total, kredit tersendat. Safe haven panik beralih ke Gold.' }
+];
+
 export const getAllEventsForMode = (mode: string) => {
   if (mode === 'easy') return [...easyEvents];
   if (mode === 'normal') return [...normalEvents];
-  // Hard mode has both but hides previous
+  if (mode === 'hard') return [...hardEvents, ...normalEvents]; // Combine to ensure plenty of variation
   return [...easyEvents, ...normalEvents];
 };
 
