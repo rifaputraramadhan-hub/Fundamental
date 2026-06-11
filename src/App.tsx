@@ -149,6 +149,8 @@ export default function App() {
       
       const dramaInterval = setInterval(() => {
         dramaTicks++;
+        let currentMove = 0;
+
         setCurrentPrice((prev) => {
           // Drama Manipulation logic
           let modifier = 0;
@@ -162,23 +164,23 @@ export default function App() {
             // Real fast movement
             modifier = chartDirection === 'down' ? -15 : 15;
           }
-          const move = generateWiggle(prev + modifier, 3);
-          
-          setChartData((data) => {
-            const last = data[data.length - 1];
-            // Stretch the current candle massively
-            return [
-              ...data.slice(0, -1),
-              {
-                ...last,
-                high: Math.max(last.high, move),
-                low: Math.min(last.low, move),
-                close: move
-              }
-            ];
-          });
-          
-          return move;
+          currentMove = generateWiggle(prev + modifier, 3);
+          return currentMove;
+        });
+
+        setChartData((data) => {
+          if (!data || data.length === 0) return data;
+          const last = data[data.length - 1];
+          // Stretch the current candle massively
+          return [
+            ...data.slice(0, -1),
+            {
+              ...last,
+              high: Math.max(last.high, currentMove),
+              low: Math.min(last.low, currentMove),
+              close: currentMove
+            }
+          ];
         });
 
         if (dramaTicks >= maxDramaTicks) {
@@ -197,29 +199,35 @@ export default function App() {
     if (screen !== 'game' || gameState === 'drama') return;
 
     const moveTimer = setInterval(() => {
+      let currentNextP = 0;
+      let currentPrev = 0;
+
       setCurrentPrice((prev) => {
-        const nextP = generateWiggle(prev, 1.5);
-        setChartData((data) => {
-          const isNewCandle = data.length % 8 === 0; // Create visually spaced candles
-          const last = data[data.length - 1];
-          if (!isNewCandle) {
-             return [
-                ...data.slice(0, -1),
-                {
-                   ...last,
-                   high: Math.max(last.high, nextP),
-                   low: Math.min(last.low, nextP),
-                   close: nextP
-                }
-             ];
-          } else {
-             return [
-               ...data,
-               { open: prev, high: Math.max(prev, nextP), low: Math.min(prev, nextP), close: nextP }
-             ];
-          }
-        });
-        return nextP;
+        currentPrev = prev;
+        currentNextP = generateWiggle(prev, 1.5);
+        return currentNextP;
+      });
+
+      setChartData((data) => {
+        if (!data || data.length === 0) return data;
+        const isNewCandle = data.length % 8 === 0; // Create visually spaced candles
+        const last = data[data.length - 1];
+        if (!isNewCandle) {
+           return [
+              ...data.slice(0, -1),
+              {
+                 ...last,
+                 high: Math.max(last.high, currentNextP),
+                 low: Math.min(last.low, currentNextP),
+                 close: currentNextP
+              }
+           ];
+        } else {
+           return [
+             ...data,
+             { open: currentPrev, high: Math.max(currentPrev, currentNextP), low: Math.min(currentPrev, currentNextP), close: currentNextP }
+           ];
+        }
       });
     }, 500);
 
@@ -658,7 +666,7 @@ export default function App() {
           {/* Action Area */}
           <div className="mt-auto h-[64px] shrink-0 mb-1 relative">
             <AnimatePresence mode="wait">
-              {gameState === 'countdown' ? (
+              {gameState === 'countdown' && (
                  <motion.div 
                    key="countdown-ui"
                    initial={{ opacity: 0, y: 20 }}
@@ -689,7 +697,9 @@ export default function App() {
                      <span className="relative flex items-center gap-1.5 font-mono"><TrendingUp className="w-4 h-4 opacity-80" /> BUY</span>
                    </button>
                  </motion.div>
-              ) : (gameState === 'fetching_news') ? (
+              )}
+              
+              {(gameState === 'fetching_news') && (
                  <motion.div 
                    key="fetching-ui"
                    initial={{ opacity: 0, scale: 0.9 }}
@@ -702,7 +712,9 @@ export default function App() {
                      <span className="w-4 h-4 rounded-full border-2 border-zinc-400 border-t-transparent animate-spin mr-2"></span><span>Generating Next Event...</span>
                    </p>
                  </motion.div>
-              ) : (gameState === 'waiting_entry' || gameState === 'waiting_news' || gameState === 'drama' || gameState === 'missed') ? (
+              )}
+              
+              {(gameState === 'waiting_entry' || gameState === 'waiting_news' || gameState === 'drama' || gameState === 'missed') && (
                  <motion.div 
                    key="waiting-ui"
                    initial={{ opacity: 0, scale: 0.9 }}
@@ -713,15 +725,15 @@ export default function App() {
                  >
                    <p className="text-zinc-200/80 font-mono tracking-widest uppercase text-xs animate-pulse flex items-center font-bold">
                      {gameState === 'drama' ? (
-                       <span className="flex items-center"><DollarSign className="w-4 h-4 mr-2 text-zinc-200" /> Injecting Volatility...</span>
+                       <span key="drama-msg" className="flex items-center"><DollarSign className="w-4 h-4 mr-2 text-zinc-200" /> Injecting Volatility...</span>
                      ) : gameState === 'missed' ? (
-                       <span className="flex items-center"><XCircle className="w-4 h-4 mr-2 text-zinc-500" /> Timeout - Skipping...</span>
+                       <span key="miss-msg" className="flex items-center"><XCircle className="w-4 h-4 mr-2 text-zinc-500" /> Timeout - Skipping...</span>
                      ) : (
-                       <span className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-green-500" /> Position Locked & Active</span>
+                       <span key="locked-msg" className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-green-500" /> Position Locked & Active</span>
                      )}
                    </p>
                  </motion.div>
-              ) : null}
+              )}
             </AnimatePresence>
           </div>
         </div>
