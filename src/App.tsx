@@ -562,7 +562,7 @@ export default function App() {
                     className="absolute inset-x-0 bottom-6 flex justify-center pointer-events-none z-20"
                   >
                     <span className="bg-zinc-950/80 backdrop-blur-xl border-zinc-800/95 backdrop-blur-md text-zinc-200 font-mono text-[10px] tracking-widest px-4 py-2 rounded-full border border-zinc-400/30 shadow-[0_0_20px_rgba(212,212,216,0.15)] uppercase font-bold flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#d4d4d8] animate-ping"></div> Placing Limit Order...
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#d4d4d8] animate-ping"></div><span>Placing Limit Order...</span>
                     </span>
                   </motion.div>
                )}
@@ -577,7 +577,7 @@ export default function App() {
                   >
                     <span className="bg-zinc-950/80 backdrop-blur-xl border-zinc-800/95 backdrop-blur-md text-white font-mono text-[10px] tracking-widest px-5 py-3 rounded-2xl border border-white/20 shadow-[0_0_30px_rgba(255,255,255,0.1)] uppercase font-bold text-center flex flex-col items-center gap-2">
                        <span className="text-zinc-200 text-xs">ENTRY EXECUTED</span> 
-                       AWAITING NEWS DATA...
+                       <span>AWAITING NEWS DATA...</span>
                     </span>
                   </motion.div>
                )}
@@ -615,22 +615,38 @@ export default function App() {
              <div className="bg-gradient-to-b from-[#d4d4d8]/10 to-[#0a0a0a] p-2 rounded-xl border border-zinc-400/20 shadow-[0_0_15px_rgba(255,255,255,0.05)] relative overflow-hidden flex flex-col justify-center">
                <div className="absolute inset-0 bg-[#d4d4d8]/5 pointer-events-none"></div>
                <div className="text-zinc-200/80 text-[10px] uppercase tracking-widest mb-1 font-bold relative z-10 drop-shadow-md">ACTUAL</div>
-               {gameState === 'result' ? (
-                  <motion.div 
-                    initial={{ scale: 1.5, opacity: 0, rotateX: 90 }} 
-                    animate={{ scale: 1, opacity: 1, rotateX: 0 }} 
-                    transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                    className={`font-extrabold text-[15px] tracking-tight shadow-sm text-white relative z-10 drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]`}
-                  >
-                     {currentNews?.actualUp || currentNews?.actualDown}
-                  </motion.div>
-               ) : mode === 'easy' ? (
-                  <div className={`font-extrabold text-[15px] tracking-tight shadow-sm text-white relative z-10 drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]`}>
-                    {nextOutcome === 'strong' ? currentNews?.actualUp : currentNews?.actualDown}
-                  </div>
-               ) : (
-                  <div className="text-neutral-500 font-bold tracking-widest text-sm relative z-10 mt-0.5">- - -</div>
-               )}
+               <div className="h-6 flex items-center justify-center">
+                 <AnimatePresence mode="wait">
+                   {gameState === 'result' ? (
+                      <motion.div 
+                        key="actual-result"
+                        initial={{ scale: 1.5, opacity: 0, rotateX: 90 }} 
+                        animate={{ scale: 1, opacity: 1, rotateX: 0 }} 
+                        exit={{ scale: 0.5, opacity: 0 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                        className={`font-extrabold text-[15px] tracking-tight shadow-sm text-white relative z-10 drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]`}
+                      >
+                         {currentNews?.actualUp || currentNews?.actualDown}
+                      </motion.div>
+                   ) : mode === 'easy' ? (
+                      <motion.div 
+                        key="actual-easy" 
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        className={`font-extrabold text-[15px] tracking-tight shadow-sm text-white relative z-10 drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]`}
+                      >
+                        {nextOutcome === 'strong' ? currentNews?.actualUp : currentNews?.actualDown}
+                      </motion.div>
+                   ) : (
+                      <motion.div 
+                        key="actual-hidden" 
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        className="text-neutral-500 font-bold tracking-widest text-sm relative z-10 mt-0.5"
+                      >
+                        - - -
+                      </motion.div>
+                   )}
+                 </AnimatePresence>
+               </div>
              </div>
 
              <div className="bg-zinc-900/50 backdrop-blur-md p-2 rounded-xl border border-zinc-800 shadow-md">
@@ -683,7 +699,7 @@ export default function App() {
                    className="absolute inset-0 flex justify-center items-center bg-zinc-900/50 backdrop-blur-md rounded-2xl border border-zinc-800 shadow-inner"
                  >
                    <p className="text-zinc-200/80 font-mono tracking-widest uppercase text-xs animate-pulse flex items-center font-bold">
-                     <span className="w-4 h-4 rounded-full border-2 border-zinc-400 border-t-transparent animate-spin mr-2"></span> Generating Next Event...
+                     <span className="w-4 h-4 rounded-full border-2 border-zinc-400 border-t-transparent animate-spin mr-2"></span><span>Generating Next Event...</span>
                    </p>
                  </motion.div>
               ) : (gameState === 'waiting_entry' || gameState === 'waiting_news' || gameState === 'drama' || gameState === 'missed') ? (
@@ -697,11 +713,11 @@ export default function App() {
                  >
                    <p className="text-zinc-200/80 font-mono tracking-widest uppercase text-xs animate-pulse flex items-center font-bold">
                      {gameState === 'drama' ? (
-                       <><DollarSign className="w-4 h-4 mr-2 text-zinc-200" /> Injecting Volatility...</>
+                       <span className="flex items-center"><DollarSign className="w-4 h-4 mr-2 text-zinc-200" /> Injecting Volatility...</span>
                      ) : gameState === 'missed' ? (
-                       <><XCircle className="w-4 h-4 mr-2 text-zinc-500" /> Timeout - Skipping...</>
+                       <span className="flex items-center"><XCircle className="w-4 h-4 mr-2 text-zinc-500" /> Timeout - Skipping...</span>
                      ) : (
-                       <><CheckCircle className="w-4 h-4 mr-2 text-green-500" /> Position Locked & Active</>
+                       <span className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-green-500" /> Position Locked & Active</span>
                      )}
                    </p>
                  </motion.div>
@@ -714,6 +730,7 @@ export default function App() {
         <AnimatePresence>
           {gameState === 'result' && currentNews && (
             <motion.div 
+              key="result-overlay"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
